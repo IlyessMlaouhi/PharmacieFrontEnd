@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +31,13 @@ class SettingsScreen extends StatelessWidget {
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Pharmacy Admin',
+                    Text('Ilyess mlaouhi',
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 16)),
                     SizedBox(height: 4),
-                    Text('admin@pharma.com',
+                    Text('ilyessmlaouhi@pharma.com',
                         style: TextStyle(color: Colors.white60, fontSize: 13)),
                   ],
                 ),
@@ -110,8 +112,13 @@ class SettingsScreen extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () {}, // TODO: navigate to login
-              icon: const Icon(Icons.logout, color: Colors.red),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                );
+              },              icon: const Icon(Icons.logout, color: Colors.red),
               label: const Text('Log out',
                   style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600)),
               style: OutlinedButton.styleFrom(
