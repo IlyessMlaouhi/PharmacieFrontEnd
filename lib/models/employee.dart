@@ -15,7 +15,6 @@ class Employee {
     required this.weeklyHours,
   });
 
-  // like Jackson's @JsonDeserialize — maps JSON → Dart object
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
       id: json['id'],
@@ -27,7 +26,6 @@ class Employee {
     );
   }
 
-  // like Jackson's @JsonSerialize — maps Dart object → JSON
   Map<String, dynamic> toJson() {
     return {
       'name': name,

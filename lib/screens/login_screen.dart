@@ -16,7 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String? _error;
 
-  // hardcoded for now — swap with real API call later
   static const String _adminEmail = 'admin';
   static const String _adminPassword = 'admin';
 
@@ -24,13 +23,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() { _isLoading = true; _error = null; });
 
-    // simulate a small delay like a real API call
     await Future.delayed(const Duration(milliseconds: 600));
 
     if (_emailCtrl.text.trim() == _adminEmail &&
         _passwordCtrl.text.trim() == _adminPassword) {
       if (!mounted) return;
-      // like Angular Router.navigate(['/dashboard']) — replaces the route stack
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const MainShell()),
@@ -58,7 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // ── top section: logo + title ──
               const SizedBox(height: 60),
               Container(
                 padding: const EdgeInsets.all(20),
@@ -82,7 +78,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.white.withOpacity(0.6), fontSize: 14)),
               const SizedBox(height: 50),
 
-              // ── white card form ──
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 24),
                 padding: const EdgeInsets.all(28),
@@ -112,7 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 13, color: Colors.grey.shade500)),
                       const SizedBox(height: 24),
 
-                      // error banner
                       if (_error != null) ...[
                         Container(
                           padding: const EdgeInsets.all(12),
@@ -135,7 +129,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16),
                       ],
 
-                      // email field
                       TextFormField(
                         controller: _emailCtrl,
                         keyboardType: TextInputType.emailAddress,
@@ -154,7 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // password field
                       TextFormField(
                         controller: _passwordCtrl,
                         obscureText: _obscurePassword,
@@ -183,7 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 28),
 
-                      // login button
                       SizedBox(
                         width: double.infinity,
                         height: 52,

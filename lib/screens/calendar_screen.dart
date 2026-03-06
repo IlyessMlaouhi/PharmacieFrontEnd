@@ -18,12 +18,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _weekStart = _getWeekStart(DateTime.now());
 
-  List<Shift> _allShifts = [];   // all shifts for the current week
+  List<Shift> _allShifts = [];
   List<Employee> _employees = [];
   bool _isLoading = true;
   String? _error;
 
-  // toggle between list view and table/grid view
   bool _showTableView = false;
 
   static DateTime _getWeekStart(DateTime date) {
@@ -75,11 +74,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _loadData();
   }
 
-  // shifts filtered for the selected day
   List<Shift> get _shiftsForSelectedDay =>
       _allShifts.where((s) => s.date == _dayKey(_selectedDay)).toList();
 
-  // shifts grouped by date key — used by table view
   Map<String, List<Shift>> get _shiftsByDay {
     final Map<String, List<Shift>> map = {};
     for (final shift in _allShifts) {
@@ -184,7 +181,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       body: Column(
         children: [
           _buildWeekHeader(),
-          // only show day strip in list view
           if (!_showTableView) _buildDayStrip(),
           const SizedBox(height: 4),
           Expanded(
@@ -208,7 +204,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // ─── WEEK HEADER with toggle button ──────────────────────────────────────
   Widget _buildWeekHeader() {
     return Container(
       color: const Color(0xFF0A1F44),
@@ -231,7 +226,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
             icon: const Icon(Icons.chevron_right, color: Colors.white),
             onPressed: _nextWeek,
           ),
-          // ── toggle view button ──
           IconButton(
             tooltip: _showTableView ? 'List view' : 'Table view',
             icon: Icon(
@@ -245,7 +239,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // ─── DAY STRIP ────────────────────────────────────────────────────────────
   Widget _buildDayStrip() {
     return Container(
       color: const Color(0xFF0A1F44),
@@ -302,7 +295,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // ─── LIST VIEW ────────────────────────────────────────────────────────────
   Widget _buildListView() {
     final shifts = _shiftsForSelectedDay;
     if (shifts.isEmpty) {
@@ -332,9 +324,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // ─── TABLE VIEW ───────────────────────────────────────────────────────────
-  // Shows all 7 days as columns, employees as rows
-  // Like a spreadsheet — same idea as an HTML table in Angular
   Widget _buildTableView() {
     if (_employees.isEmpty) {
       return const Center(child: Text('No employees found'));
@@ -349,11 +338,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           border: TableBorder.all(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8)),
           defaultColumnWidth: const FixedColumnWidth(110),
           children: [
-            // ── header row: day names ──
             TableRow(
               decoration: const BoxDecoration(color: Color(0xFF0A1F44)),
               children: [
-                // first cell: "Employee" label
                 const Padding(
                   padding: EdgeInsets.all(10),
                   child: Text('Employee',
@@ -381,12 +368,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 }),
               ],
             ),
-            // ── one row per employee ──
             ..._employees.map((emp) {
               return TableRow(
                 decoration: BoxDecoration(color: Colors.white,),
                 children: [
-                  // employee name cell
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(emp.name,
@@ -395,7 +380,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             fontSize: 12,
                             color: Color(0xFF0A1F44))),
                   ),
-                  // one cell per day
                   ...List.generate(7, (i) {
                     final day = _weekStart.add(Duration(days: i));
                     final key = _dayKey(day);
@@ -447,7 +431,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // ─── SHIFT CARD (list view) ───────────────────────────────────────────────
   Widget _buildShiftCard(Shift shift) {
     final color = _occupationColor(null);
     return Card(
@@ -538,7 +521,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 }
 
-// ─── SHIFT FORM BOTTOM SHEET ──────────────────────────────────────────────────
 
 class _ShiftFormSheet extends StatefulWidget {
   final Shift? shift;
@@ -661,7 +643,6 @@ class _ShiftFormSheetState extends State<_ShiftFormSheet> {
                         fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0A1F44))),
                 const SizedBox(height: 20),
 
-                // employee dropdown
                 DropdownButtonFormField<int>(
                   value: _selectedEmployeeId,
                   decoration: InputDecoration(
@@ -680,7 +661,6 @@ class _ShiftFormSheetState extends State<_ShiftFormSheet> {
                 ),
                 const SizedBox(height: 14),
 
-                // date picker field
                 TextFormField(
                   controller: _dateCtrl,
                   readOnly: true,
@@ -697,7 +677,6 @@ class _ShiftFormSheetState extends State<_ShiftFormSheet> {
                 ),
                 const SizedBox(height: 14),
 
-                // start/end time row
                 Row(
                   children: [
                     Expanded(

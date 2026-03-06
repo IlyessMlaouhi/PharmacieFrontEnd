@@ -12,7 +12,6 @@ class EmployeesScreen extends StatefulWidget {
 class _EmployeesScreenState extends State<EmployeesScreen> {
   final EmployeeService _service = EmployeeService();
 
-  // like an Angular component property bound to *ngFor
   List<Employee> _employees = [];
   bool _isLoading = true;
   String? _error;
@@ -20,7 +19,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   @override
   void initState() {
     super.initState();
-    _loadEmployees(); // like ngOnInit calling this.employeeService.getAll()
+    _loadEmployees();
   }
 
   Future<void> _loadEmployees() async {
@@ -36,7 +35,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   Future<void> _deleteEmployee(int id) async {
     try {
       await _service.deleteEmployee(id);
-      _loadEmployees(); // refresh list — like calling ngOnInit again
+      _loadEmployees();
     } catch (e) {
       _showError('Failed to delete employee');
     }
@@ -54,12 +53,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     );
   }
 
-  // opens the bottom sheet for add OR edit
-  // like opening an Angular Material Dialog with optional data passed in
   void _openEmployeeForm({Employee? employee}) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // lets the sheet grow with the keyboard
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -118,7 +115,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           : _employees.isEmpty
           ? _buildEmpty()
           : RefreshIndicator(
-        onRefresh: _loadEmployees, // pull to refresh
+        onRefresh: _loadEmployees,
         color: const Color(0xFF0A1F44),
         child: ListView.builder(
           padding: const EdgeInsets.all(16),
@@ -180,7 +177,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   }
 }
 
-// ─── EMPLOYEE CARD ─────────────────────────────────────────────────────────────
 
 class _EmployeeCard extends StatelessWidget {
   final Employee employee;
@@ -294,11 +290,9 @@ class _EmployeeCard extends StatelessWidget {
   }
 }
 
-// ─── EMPLOYEE FORM BOTTOM SHEET ────────────────────────────────────────────────
-// like an Angular reactive form inside a Material Dialog
 
 class _EmployeeFormSheet extends StatefulWidget {
-  final Employee? employee; // null = create, non-null = edit
+  final Employee? employee;
   final Future<void> Function(Employee) onSave;
 
   const _EmployeeFormSheet({this.employee, required this.onSave});
@@ -311,7 +305,6 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
   final _formKey = GlobalKey<FormState>();
   bool _isSaving = false;
 
-  // like FormControl in Angular reactive forms
   late TextEditingController _nameCtrl;
   late TextEditingController _emailCtrl;
   late TextEditingController _phoneCtrl;
@@ -323,7 +316,6 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
   @override
   void initState() {
     super.initState();
-    // pre-fill if editing — like patchValue() in Angular
     _nameCtrl  = TextEditingController(text: widget.employee?.name ?? '');
     _emailCtrl = TextEditingController(text: widget.employee?.email ?? '');
     _phoneCtrl = TextEditingController(text: widget.employee?.phone ?? '');
@@ -356,7 +348,6 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
   Widget build(BuildContext context) {
     final isEdit = widget.employee != null;
     return Padding(
-      // pushes the form up when keyboard appears — like CSS position sticky
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: const EdgeInsets.all(24),
@@ -371,7 +362,6 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // handle bar
                 Center(
                   child: Container(
                     width: 40, height: 4,
@@ -395,7 +385,6 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
                   return null;
                 }),
 
-                // occupation dropdown
                 const SizedBox(height: 4),
                 DropdownButtonFormField<String>(
                   value: _selectedOccupation,

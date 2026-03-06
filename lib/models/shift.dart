@@ -2,8 +2,8 @@ class Shift {
   final int? id;
   final int employeeId;
   final String? employeeName;
-  final String date;       // "yyyy-MM-dd"
-  final String startTime;  // "HH:mm:ss"
+  final String date;
+  final String startTime;
   final String endTime;
   final String? description;
   final double? durationHours;
@@ -44,7 +44,6 @@ class Shift {
     };
   }
 
-  // display helper — "08:00" from "08:00:00"
   String get startDisplay => startTime.substring(0, 5);
   String get endDisplay => endTime.substring(0, 5);
 }

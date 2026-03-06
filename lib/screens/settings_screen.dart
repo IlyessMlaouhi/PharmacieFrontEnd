@@ -13,7 +13,6 @@ class SettingsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
 
-          // ─── Profile card ───────────────────────────────────────────────
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -44,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.edit_outlined, color: Colors.white60),
-                  onPressed: () {}, // TODO
+                  onPressed: () {},
                 ),
               ],
             ),
@@ -52,7 +51,6 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // ─── Section: App ────────────────────────────────────────────────
           _buildSectionLabel('Application'),
           _buildTile(
             icon: Icons.notifications_outlined,
@@ -76,7 +74,6 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // ─── Section: Pharmacy ───────────────────────────────────────────
           _buildSectionLabel('Pharmacy'),
           _buildTile(
             icon: Icons.business_outlined,
@@ -91,7 +88,6 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // ─── Section: Support ────────────────────────────────────────────
           _buildSectionLabel('Support'),
           _buildTile(
             icon: Icons.help_outline,
@@ -108,7 +104,6 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // ─── Logout button ───────────────────────────────────────────────
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
