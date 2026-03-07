@@ -57,6 +57,72 @@ class _CalendarScreenState extends State<CalendarScreen> {
       setState(() { _error = e.toString(); _isLoading = false; });
     }
   }
+  void _showShiftActions(Shift shift, Employee emp) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40, height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2)),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(emp.name,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0A1F44))),
+            const SizedBox(height: 4),
+            Text('${shift.startDisplay} – ${shift.endDisplay}',
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade500)),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _openShiftForm(shift: shift);
+                },
+                icon: const Icon(Icons.edit_outlined, color: Colors.white),
+                label: const Text('Edit Shift', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0A1F44),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _confirmDelete(shift);
+                },
+                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                label: const Text('Delete Shift', style: TextStyle(color: Colors.red)),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.red),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _previousWeek() {
     setState(() {
@@ -399,8 +465,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       )
                           : Column(
                         children: shiftsForCell.map((s) => GestureDetector(
-                          onLongPress: () => _confirmDelete(s),
-                          onTap: () => _openShiftForm(shift: s),
+                          onTap: () => _showShiftActions(s, emp),
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 2),
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
