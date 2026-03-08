@@ -15,6 +15,13 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   List<Employee> _employees = [];
   bool _isLoading = true;
   String? _error;
+  String _selectedFilter = 'ALL';
+  final List<String> _filterOptions = ['ALL', 'PHARMACIST', 'CASHIER', 'STOCK_MANAGER'];
+
+  List<Employee> get _filteredEmployees {
+    if (_selectedFilter == 'ALL') return _employees;
+    return _employees.where((e) => e.occupation == _selectedFilter).toList();
+  }
 
   @override
   void initState() {
@@ -103,6 +110,55 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       ),
     );
   }
+  Widget _buildFilterBar() {
+    return Container(
+      height: 44,
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _filterOptions.length,
+        itemBuilder: (_, i) {
+          final option = _filterOptions[i];
+          final isSelected = _selectedFilter == option;
+
+          final labels = {
+            'ALL': 'All',
+            'PHARMACIST': 'Pharmacist',
+            'CASHIER': 'Cashier',
+            'STOCK_MANAGER': 'Stock Manager',
+          };
+
+          return GestureDetector(
+            onTap: () => setState(() => _selectedFilter = option),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              margin: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFF0A1F44) : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isSelected ? const Color(0xFF0A1F44) : Colors.grey.shade300,
+                ),
+                boxShadow: isSelected
+                    ? [BoxShadow(color: const Color(0xFF0A1F44).withOpacity(0.3),
+                    blurRadius: 6, offset: const Offset(0, 2))]
+                    : [],
+              ),
+              child: Text(
+                labels[option]!,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? Colors.white : Colors.grey.shade600,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,22 +168,29 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           ? const Center(child: CircularProgressIndicator(color: Color(0xFF0A1F44)))
           : _error != null
           ? _buildError()
-          : _employees.isEmpty
-          ? _buildEmpty()
-          : RefreshIndicator(
-        onRefresh: _loadEmployees,
-        color: const Color(0xFF0A1F44),
-        child: ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: _employees.length,
-          itemBuilder: (context, index) {
-            return _EmployeeCard(
-              employee: _employees[index],
-              onEdit: () => _openEmployeeForm(employee: _employees[index]),
-              onDelete: () => _confirmDelete(_employees[index]),
-            );
-          },
-        ),
+          : Column(
+        children: [
+          _buildFilterBar(),
+          Expanded(
+            child: _filteredEmployees.isEmpty
+                ? _buildEmpty()
+                : RefreshIndicator(
+              onRefresh: _loadEmployees,
+              color: const Color(0xFF0A1F44),
+              child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                itemCount: _filteredEmployees.length,
+                itemBuilder: (context, index) {
+                  return _EmployeeCard(
+                    employee: _filteredEmployees[index],
+                    onEdit: () => _openEmployeeForm(employee: _filteredEmployees[index]),
+                    onDelete: () => _confirmDelete(_filteredEmployees[index]),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openEmployeeForm(),
@@ -376,7 +439,21 @@ class _EmployeeFormSheetState extends State<_EmployeeFormSheet> {
                 const SizedBox(height: 20),
 
                 _buildField(_nameCtrl,  'Full Name',     Icons.person_outline,  validator: (v) => v!.isEmpty ? 'Required' : null),
-                _buildField(_emailCtrl, 'Email',         Icons.mail_outline,    keyboardType: TextInputType.emailAddress, validator: (v) => v!.isEmpty ? 'Required' : null),
+                _buildField(_emailCtrl, 'Email', Icons.mail_outline, keyboardType: TextInputType.emailAddress,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return 'Required';
+                    }
+
+                    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+
+                    if (!emailRegex.hasMatch(v)) {
+                      return 'Enter a valid email';
+                    }
+
+                    return null;
+                  },
+                ),
                 _buildField(_phoneCtrl, 'Phone',         Icons.phone_outlined,  keyboardType: TextInputType.phone, validator: (v) => v!.isEmpty ? 'Required' : null),
                 _buildField(_hoursCtrl, 'Weekly Hours',  Icons.schedule_outlined, keyboardType: TextInputType.number, validator: (v) {
                   if (v!.isEmpty) return 'Required';
