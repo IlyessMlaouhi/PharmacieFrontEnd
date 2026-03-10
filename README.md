@@ -24,7 +24,6 @@ Application Android développée avec Flutter pour la gestion du planning du per
 
 ### Option 1 — APK (recommandé)
 Télécharger et installer l'APK directement sur n'importe quel appareil ou émulateur Android. Aucune installation supplémentaire requise.
-> **[Télécharger l'APK](#)** ← remplacer par votre lien
 
 ### Option 2 — Depuis le code source
 ```bash
